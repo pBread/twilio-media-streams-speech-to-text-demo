@@ -66,7 +66,7 @@ app.ws("/connection/:callSid", (ws, req) => {
     console.log(`transcript: ${text}`)
   );
   speechToText.on("finalTranscript", (text) =>
-    console.log(`final transcript: ${text}`)
+    console.log(`finalTranscript: ${text}`)
   );
 });
 

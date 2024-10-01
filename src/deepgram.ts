@@ -58,7 +58,7 @@ const connectToDeepgram = async () => {
   });
 
   liveClient.on(LiveTranscriptionEvents.Close, () => {
-    liveClient = null; // Allow re-initialization after closing
+    liveClient = null; // allow re-initialization after closing
   });
 };
 
