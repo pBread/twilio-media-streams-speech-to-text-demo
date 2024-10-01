@@ -22,8 +22,8 @@ This repository demonstrates how to connect Twilio Media Streams to Deepgram to 
 ### 1. Clone Repo
 
 ```bash
-git clone https://github.com/pBread/twilio-media-stream-speech-to-text-demo.git
-cd twilio-media-stream-speech-to-text-demo
+git clone https://github.com/pBread/twilio-media-streams-speech-to-text-demo.git
+cd twilio-media-streams-speech-to-text-demo
 ```
 
 ### 2. Install Dependencies
