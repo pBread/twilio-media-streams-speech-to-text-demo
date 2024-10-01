@@ -2,8 +2,6 @@
 
 This repository demonstrates how to connect Twilio Media Streams to Deepgram to generate real-time transcripts of voice calls. These transcripts can be leveraged for various use cases, such as connecting voice calls to text-based LLMs, performing real-time analysis of calls, and empowering agents with live recommendations.
 
-The app is built using TypeScript and creates an Express server to manage incoming Twilio Voice webhooks and a WebSocket endpoint that handles Twilio's media stream packets (audio). These audio packets are sent to Deepgram to be transcribed in real time.
-
 # How it Works
 
 - The `/incoming-call` endpoint responds to Twilio's incoming call webhook with the [TwiML noun `<Stream/>`](https://www.twilio.com/docs/voice/twiml/stream)
