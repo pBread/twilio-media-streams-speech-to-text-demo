@@ -8,10 +8,37 @@ const { app } = ExpressWs(express());
 app.use(express.urlencoded({ extended: true })).use(express.json());
 
 /****************************************************
- Webhooks
+ Webhook Endpoints
 ****************************************************/
 app.post("/incoming-call", async (req, res) => {
-  console.log("incoming-call");
+  const { CallSid, From, To } = req.body;
+
+  console.log(`incoming-call from ${From} to ${To}`);
+
+  res.status(200);
+  res.type("text/xml");
+  res.end(`
+      <Response>
+        <Connect>
+          <Stream url="wss://${process.env.HOSTNAME}/connection/${CallSid}" />
+        </Connect>
+      </Response>
+      `);
+});
+
+app.post("/call-status-update", (req, res) => {
+  const { CallSid, CallStatus } = req.body;
+  console.log(`call-status-update ${CallSid} ${req.body.CallStatus}`);
+});
+
+/****************************************************
+ Media Stream
+****************************************************/
+app.ws("/connection/:callSid", (ws, req) => {
+  const CallSid = req.params.callSid;
+  console.log(`incoming websocket ${CallSid}`);
+
+  ws.on("error", (err) => console.error(`websocket error`, err));
 });
 
 /****************************************************
