@@ -2,18 +2,20 @@ import dotenv from "dotenv-flow";
 import express from "express";
 import ExpressWs from "express-ws";
 import type { TwilioStreamMessage } from "./types";
+import { SpeechToTextService } from "./deepgram";
 
 dotenv.config();
 
 const { app } = ExpressWs(express());
 app.use(express.urlencoded({ extended: true })).use(express.json());
 
+let sttSvc: SpeechToTextService | null = null;
+
 /****************************************************
  Webhook Endpoints
 ****************************************************/
 app.post("/incoming-call", async (req, res) => {
   const { CallSid, From, To } = req.body;
-
   console.log(`incoming-call from ${From} to ${To}`);
 
   res.status(200);

@@ -7,6 +7,7 @@
   },
   "version": "1.0.0",
   "dependencies": {
+    "@deepgram/sdk": "^3.8.0",
     "dotenv-flow": "^4.1.0",
     "express": "^4.21.0",
     "express-ws": "^5.0.2"
