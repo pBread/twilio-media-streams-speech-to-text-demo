@@ -66,3 +66,7 @@ Go to your [Twilio Console](https://console.twilio.com/) and configure the Voice
 
 - <b>Incoming Call Webhook</b>: Select `POST` and set url to: https://your-ngrok-domain.ngrok.io/incoming-call
 - <b>Call Status Update Webhook</b>: Select `POST` and set url to: https://your-ngrok-domain.ngrok.io/call-status-update
+
+### 6. Place a Call to Your Twilio Phone Number
+
+You're all set. Place a call to your Twilio Phone Number and you should see the real-time transcript logged to your local terminal.
