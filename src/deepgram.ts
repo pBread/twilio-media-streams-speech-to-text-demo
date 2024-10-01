@@ -1,12 +1,12 @@
+import {
+  createClient,
+  type LiveClient,
+  type LiveTranscriptionEvent,
+  LiveTranscriptionEvents,
+  type UtteranceEndEvent,
+} from "@deepgram/sdk";
 import dotenv from "dotenv-flow";
 import EventEmitter from "events";
-import {
-  LiveClient,
-  LiveTranscriptionEvents,
-  type LiveTranscriptionEvent,
-  createClient,
-  UtteranceEndEvent,
-} from "@deepgram/sdk";
 
 dotenv.config();
 
@@ -40,15 +40,15 @@ const connectToDeepgram = async () => {
   liveClient = deepgram.listen.live({
     language: "en",
 
-    encoding: "mulaw",
-    interim_results: true,
+    encoding: "mulaw", // twilio encoding
+    interim_results: true, // enables partial transcripts
     model: "nova-2",
     punctuate: true,
 
     sample_rate: 8000,
     utterance_end_ms: 1000,
 
-    vad_events: true, // Voice Activity Detection enables alternate event types, such as SpeechStarted
+    vad_events: true, // VAD (Voice Activity Detection) enables alternate event types, such as SpeechStarted
     smart_format: true,
     endpointing: 1000,
   });
@@ -57,6 +57,8 @@ const connectToDeepgram = async () => {
   liveClient.on(LiveTranscriptionEvents.UtteranceEnd, onUtteranceEnd);
 
   liveClient.on(LiveTranscriptionEvents.Open, () => {
+    console.log(`Deepgram live connected`);
+    // required due to potential delay between initialization (i.e. during incoming-call webhook) and media stream connection
     liveClient?.keepAlive();
   });
 
@@ -96,15 +98,15 @@ function onUtteranceEnd(event: UtteranceEndEvent) {
  * @param {String} audio A base64 MULAW/8000 audio stream, see https://www.twilio.com/docs/voice/media-streams/websocket-messages
  */
 const sendAudio = (audio: string) => {
-  if (liveClient && liveClient.getReadyState() === 1) {
+  if (liveClient && liveClient.getReadyState() === 1)
     liveClient.send(Buffer.from(audio, "base64"));
-  }
 };
 
 const speechToText = {
   connectToDeepgram,
-  sendAudio,
+  getFullTranscript: () => transcripts,
   on: emitter.on.bind(emitter),
+  sendAudio,
 };
 
 export default speechToText;
