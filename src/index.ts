@@ -2,14 +2,12 @@ import dotenv from "dotenv-flow";
 import express from "express";
 import ExpressWs from "express-ws";
 import type { TwilioStreamMessage } from "./types";
-import { SpeechToTextService } from "./deepgram";
+import speechToText from "./deepgram";
 
 dotenv.config();
 
 const { app } = ExpressWs(express());
 app.use(express.urlencoded({ extended: true })).use(express.json());
-
-let sttSvc: SpeechToTextService | null = null;
 
 /****************************************************
  Webhook Endpoints
@@ -20,10 +18,11 @@ app.post("/incoming-call", async (req, res) => {
 
   res.status(200);
   res.type("text/xml");
+
   res.end(`
       <Response>
         <Connect>
-          <Stream url="wss://${process.env.HOSTNAME}/connection/${CallSid}" />
+          <Stream url="wss://${process.env.HOSTNAME}/connection/${CallSid}"
         </Connect>
       </Response>
       `);
@@ -58,11 +57,17 @@ app.ws("/connection/:callSid", (ws, req) => {
       // https://www.twilio.com/docs/voice/media-streams/websocket-messages#mark-message
     } else if (msg.event === "start") console.log("media stream started");
     else if (msg.event === "stop") console.log("media stream stopped");
-    else if (msg.event === "media") {
-      // handling media
-      console.log("media received", msg.sequenceNumber); // for testing
-    } else console.warn(`unhandled media stream message`, msg);
+    else if (msg.event === "media") speechToText.sendAudio(msg.media.payload);
+    else console.warn(`unhandled media stream message`, msg);
   });
+
+  speechToText.on("speechStarted", () => console.log("speech started"));
+  speechToText.on("partialTranscript", (text) =>
+    console.log(`transcript: ${text}`)
+  );
+  speechToText.on("finalTranscript", (text) =>
+    console.log(`final transcript: ${text}`)
+  );
 });
 
 /****************************************************
