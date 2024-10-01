@@ -8,7 +8,7 @@
     "resolveJsonModule": true,
     "rootDir": ".",
     "skipLibCheck": true,
-    "strict": false,
+    "strict": true,
     "target": "es6"
   },
   "exclude": ["node_modules", "**/*.spec.ts", "scripts"],
