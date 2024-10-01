@@ -1,8 +1,8 @@
 import dotenv from "dotenv-flow";
 import express from "express";
 import ExpressWs from "express-ws";
-import type { TwilioStreamMessage } from "./types";
 import speechToText from "./deepgram";
+import type { TwilioStreamMessage } from "./types";
 
 dotenv.config();
 
@@ -30,7 +30,9 @@ app.post("/incoming-call", async (req, res) => {
 
 app.post("/call-status-update", (req, res) => {
   const { CallSid, CallStatus } = req.body;
-  console.log(`call-status-update ${CallSid} ${req.body.CallStatus}`);
+  console.log(`call-status-update ${CallSid} ${CallStatus}`);
+
+  res.status(200).send();
 });
 
 /****************************************************
@@ -62,11 +64,12 @@ app.ws("/connection/:callSid", (ws, req) => {
   });
 
   speechToText.on("speechStarted", () => console.log("speech started"));
-  speechToText.on("partialTranscript", (text) =>
-    console.log(`transcript: ${text}`)
+
+  speechToText.on("draftTranscript", (text) =>
+    console.log(`Draft Transcript: ${text}`)
   );
-  speechToText.on("finalTranscript", (text) =>
-    console.log(`finalTranscript: ${text}`)
+  speechToText.on("finalTranscript", (text, fullText) =>
+    console.log(`Final Transcript: ${text}`)
   );
 });
 
