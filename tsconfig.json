@@ -12,5 +12,5 @@
     "target": "es6"
   },
   "exclude": ["node_modules", "**/*.spec.ts", "scripts"],
-  "include": ["src/**/*.ts"]
+  "include": ["src/**/*.ts", "global.d.ts"]
 }
